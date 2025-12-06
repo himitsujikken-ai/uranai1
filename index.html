@@ -42,28 +42,28 @@
     /* --- ヘッダー --- */
     header {
         width: 100%;
-        padding: 30px 20px 20px; /* 下のパディングを少し増やす */
+        padding: 30px 20px 20px;
         text-align: center;
         background: rgba(0,0,0,0.3);
         backdrop-filter: blur(5px);
         border-bottom: 1px solid rgba(255,255,255,0.1);
         box-sizing: border-box;
-        display: flex; flex-direction: column; align-items: center; /* 中央揃え */
+        display: flex; flex-direction: column; align-items: center;
     }
 
     h1 {
-        font-size: 24px; /* 少し大きく */
+        font-size: 24px;
         letter-spacing: 0.2em;
         color: var(--ginza-gold);
         text-shadow: 0 0 10px var(--neon-glow);
-        margin: 0 0 20px 0; /* 下の余白を増やす */
+        margin: 0 0 20px 0;
     }
     
     /* トップバナー画像エリア */
     .top-banner {
         width: 100%;
-        max-width: 600px; /* テキスト幅と合わせる */
-        margin-bottom: 25px; /* テキストとの間隔 */
+        max-width: 600px;
+        margin-bottom: 25px;
         border-radius: 4px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
@@ -75,7 +75,7 @@
     }
 
     .intro-text {
-        font-size: 13px; /* 少し大きく */
+        font-size: 13px;
         line-height: 1.9;
         max-width: 600px;
         margin: 0 auto;
@@ -84,6 +84,25 @@
     }
     
     .intro-highlight { color: var(--ginza-gold); font-weight: bold; }
+
+    /* 注意書きリストのデザイン */
+    .usage-guide {
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .usage-guide ul {
+        margin: 0;
+        padding-left: 1.2em;
+    }
+    .usage-guide li {
+        margin-bottom: 5px;
+    }
+    .usage-guide li:last-child {
+        margin-bottom: 0;
+    }
 
     /* --- メニュー --- */
     .container {
@@ -234,6 +253,14 @@
             宇宙のリズム（凪や時化）が、運命を強制的に書き換える
             <span class="intro-highlight">「オーバーライド（神意介入）」</span>の瞬間を見逃さないでください。
         </p>
+        
+        <div class="usage-guide">
+            <ul>
+                <li>生年月日など不要です。</li>
+                <li>占いたいことをイメージをして三回宙に問い、ボタンを押してください。</li>
+                <li>仕組みについての解説は準備中です</li>
+            </ul>
+        </div>
     </div>
 </header>
 
