@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>神羅万象・八十一占（完全版）</title>
+<title>神羅万象・八十一占（SNS連携版）</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
     /* --- デザインテーマ：宇宙の銀座 × 深海 --- */
@@ -108,7 +108,7 @@
         width: 100%; max-width: 400px; padding: 40px 25px;
         border-radius: 4px; text-align: center; position: relative;
         box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-        max-height: 80vh; overflow-y: auto;
+        max-height: 75vh; overflow-y: auto;
         border: 1px solid rgba(255,255,255,0.1);
         transform: scale(0.95); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -164,25 +164,35 @@
 
     /* アクションボタン群 */
     .action-area {
-        margin-top: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        margin-top: 20px;
+        width: 85%; max-width: 400px;
+        display: flex; flex-direction: column; gap: 8px;
+        z-index: 1001;
     }
 
+    /* ボタンの共通スタイル */
     .action-btn {
-        padding: 12px;
-        border: none; border-radius: 4px;
+        padding: 12px; border: none; border-radius: 4px;
         font-size: 14px; font-weight: bold;
         cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
         transition: 0.2s; text-decoration: none;
     }
+    .action-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-    .btn-calendar { background-color: #2c3e50; color: #fff; border: 1px solid #4ca1af; }
-    .btn-share { background-color: #c0392b; color: #fff; border: 1px solid #e74c3c; }
-    .btn-close { background-color: transparent; color: #aaa; border: 1px solid #555; margin-top: 10px;}
+    /* 色設定 */
+    .btn-share-img { background: linear-gradient(135deg, #d35400, #e67e22); color: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    .btn-x { background-color: #000; color: #fff; border: 1px solid #333; }
+    .btn-line { background-color: #06c755; color: #fff; }
+    .btn-cal { background-color: #2c3e50; color: #fff; border: 1px solid #4ca1af; }
+    
+    .btn-close { 
+        background-color: transparent; color: #aaa; border: 1px solid #555; 
+        margin-top: 5px; padding: 10px;
+    }
 
-    .btn-calendar:active, .btn-share:active { transform: scale(0.95); opacity: 0.8; }
+    /* SNSボタングループ（横並び） */
+    .sns-group { display: flex; gap: 8px; }
+    .sns-group .action-btn { flex: 1; }
 
 </style>
 </head>
@@ -216,21 +226,27 @@
 </div>
 
 <div id="result-area">
+    
     <div id="capture-target" class="result-box">
         <div id="result-content"></div>
     </div>
     
-    <div class="action-area" id="action-buttons" style="display:none; width:85%; max-width:400px; z-index:1001;">
-        <a id="btn-cal" class="action-btn btn-calendar" target="_blank">
-            📅 カレンダーに記録
-        </a>
-        <button onclick="shareImage()" class="action-btn btn-share">
+    <div class="action-area" id="action-buttons" style="display:none;">
+        
+        <button onclick="shareImage()" class="action-btn btn-share-img">
             📷 画像でシェア
         </button>
-        <button onclick="closeResult()" class="action-btn btn-close">
-            閉じる
-        </button>
+
+        <div class="sns-group">
+            <a id="btn-x" class="action-btn btn-x" target="_blank">𝕏 ポスト</a>
+            <a id="btn-line" class="action-btn btn-line" target="_blank">LINE送る</a>
+        </div>
+
+        <a id="btn-cal" class="action-btn btn-cal" target="_blank">📅 カレンダー</a>
+        
+        <button onclick="closeResult()" class="action-btn btn-close">閉じる</button>
     </div>
+
 </div>
 
 <script>
@@ -272,238 +288,4 @@
         { k: "雷天大壮", r: "らいてんたいそう", d: "【吉】勢いが強すぎます。暴走すると失敗します。自制心を持って進めば成功します。" },
         { k: "火地晋", r: "かちしん", d: "【大吉】旭日が昇る勢い。目上の引き立てを受け、トントン拍子に出世・前進します。" },
         { k: "地火明夷", r: "ちかめいい", d: "【凶】太陽が沈み、闇に包まれます。才能を隠し、愚か者を装って難を逃れるべき時。" },
-        { k: "風火家人", r: "ふうかかじん", d: "【吉】家庭や内部を守る時。外に出るより、内側を整えることで安定が得られます。" },
-        { k: "火沢睽", r: "かたくけい", d: "【小凶】背き合う時。意見が対立し、和解は難しい。無理に合わせようとしないこと。" },
-        { k: "水山蹇", r: "すいざんけん", d: "【凶】足踏み状態。進めば進むほど困難になります。助けを求め、時を待ちましょう。" },
-        { k: "雷水解", r: "らいすいかい", d: "【吉】困難が解ける時。雪解けです。早めに行動して問題を解決しましょう。" },
-        { k: "山沢損", r: "さんたくそん", d: "【吉】損して得取れ。今の奉仕や犠牲は、将来大きな利益となって返ってきます。" },
-        { k: "風雷益", r: "ふうらいえき", d: "【大吉】利益が増す時。追い風が吹いています。積極的に事業や計画を進めて吉。" },
-        { k: "沢天夬", r: "たくてんかい", d: "【凶】決壊寸前。問題を放置せず、断固たる決断で排除しなければなりません。" },
-        { k: "天風姤", r: "てんぷうこう", d: "【小凶】予期せぬ出会い。特に女性難やハニートラップに注意。深入りは禁物です。" },
-        { k: "沢地萃", r: "たくちすい", d: "【吉】人が集まる時。祭りごとや商売には最適です。リーダーシップが求められます。" },
-        { k: "地風升", r: "ちふうしょう", d: "【大吉】順調に上昇する時。小さな種が巨木になるように、着実な努力が実ります。" },
-        { k: "沢水困", r: "たくすいこん", d: "【凶】水が枯れる沢。進退窮まります。言葉も通じません。じっと我慢の時です。" },
-        { k: "水風井", r: "すいふうせい", d: "【吉】井戸の水。変わらぬ価値。労を惜しまず、人々に尽くすことで評価されます。" },
-        { k: "沢火革", r: "たくかかく", d: "【吉】変革の時。古いものを捨て、新しく作り直すのに最適なタイミングです。" },
-        { k: "火風鼎", r: "かふうてい", d: "【大吉】三本足の器。協力して新体制を作る時。安定と繁栄が約束されています。" },
-        { k: "震為雷", r: "しんいらい", d: "【吉】雷の衝撃。驚くような出来事がありますが、実害はありません。冷静に対処を。" },
-        { k: "艮為山", r: "ごんいざん", d: "【凶】動かざること山の如し。今は何をしてもうまくいきません。止まるべき時です。" },
-        { k: "風山漸", r: "ふうざんぜん", d: "【吉】順序正しく進む時。急がば回れ。一歩ずつ着実に進めば大成します。" },
-        { k: "雷沢帰妹", r: "らいたくきまい", d: "【凶】順序が逆です。目先の欲に走ると失敗します。道ならぬ恋や計画は破綻します。" },
-        { k: "雷火豊", r: "らいかほう", d: "【吉】豊かさの絶頂。日中はいずれ傾くことを知り、今のうちに備えを固めましょう。" },
-        { k: "火山旅", r: "かざんりょ", d: "【小凶】孤独な旅。不安定な状態です。定住するより、移動しながら学ぶ時期です。" },
-        { k: "巽為風", r: "そんいふう", d: "【吉】風のように入り込む時。謙虚に従順に行動すれば、どこへでも通じます。" },
-        { k: "兌為沢", r: "だいたく", d: "【大吉】喜びと笑顔の時。人との会話や交流を楽しむことで、運気がさらに上がります。" },
-        { k: "風水渙", r: "ふうすいかん", d: "【吉】散らばる時。悩みが霧散します。遠出や冒険に出ることで道が開けます。" },
-        { k: "水沢節", r: "すいたくせつ", d: "【吉】節度を守る時。制限の中にこそ自由があります。けじめをつけることが大切。" },
-        { k: "風沢中孚", r: "ふうたくちゅうふ", d: "【大吉】誠実さの勝利。真心があれば、豚や魚のような相手とも心が通じ合います。" },
-        { k: "雷山小過", r: "らいざんしょうか", d: "【凶】飛び過ぎる鳥。高望みは失敗します。低く飛び、謙虚さを保つことが重要です。" },
-        { k: "水火既済", r: "すいかきせい", d: "【小吉】完成しました。これ以上の発展は望めません。現状維持（守成）に努めましょう。" },
-        { k: "火水未済", r: "かすいびせい", d: "【小吉】未完成。まだ整っていませんが、未来への希望があります。これから始まります。" }
-    ];
-
-    // --- 神代十七代データ ---
-    const godsData = [
-        { n: "国常立尊", r: "くにのとこたちのみこと", d: "【基盤確立】<br>大地の根源神が告げる。<br>迷いを断ち切り、足元を固めよ。<br>揺るぎない信念こそが、最強の盾となる。" },
-        { n: "豊雲野神", r: "とよくもののかみ", d: "【原初の雲】<br>可能性は無限に広がっている。<br>枠に囚われるな。まだ見ぬ領域を開拓せよ。<br>自由な発想が道を拓く。" },
-        { n: "宇比地邇神", r: "うひじにのかみ", d: "【泥土の結晶】<br>形なきものから、形あるものが生まれる。<br>混沌を恐れるな。その中にある宝を見つけ出せ。<br>始まりの時だ。" },
-        { n: "須比智邇神", r: "すひちにのかみ", d: "【砂土の堆積】<br>一足飛びの成功はない。<br>日々の小さな積み重ねが、やがて強固な地盤となる。<br>継続こそが力なり。" },
-        { n: "角杙神", r: "つのぐいのかみ", d: "【生命の萌芽】<br>土を突き破り、芽が出る時。<br>新しい企画、新しい関係が動き出す。<br>その初期衝動を大切にせよ。" },
-        { n: "活杙神", r: "いくぐいのかみ", d: "【成長と活力】<br>生命力がみなぎっている。<br>迷わず勢いに乗れ。<br>今なら、どんな壁も突き破ることができる。" },
-        { n: "意富斗能地神", r: "おおとのじのかみ", d: "【男性原理】<br>決断の時だ。<br>待つのではなく、自ら掴み取れ。<br>論理と意志の力で、状況をリードせよ。" },
-        { n: "大斗乃弁神", r: "おおとのべのかみ", d: "【女性原理】<br>受け入れ、育む時。<br>強引さよりも、包容力が事態を好転させる。<br>柔らかさは硬さよりも強い。" },
-        { n: "於母陀流神", r: "おもだるのかみ", d: "【完成の美】<br>調和が訪れる。<br>不足を嘆くのではなく、今あるものの美しさを見よ。<br>満ち足りた心が、さらなる幸運を呼ぶ。" },
-        { n: "阿夜訶志古泥神", r: "あやかしこねのかみ", d: "【畏敬と感性】<br>言葉にできない感覚を信じよ。<br>謙虚さを持ち、大いなるものに感謝する時、<br>あなたは守られている。" },
-        { n: "伊邪那岐命", r: "いざなぎのみこと", d: "【創造の父】<br>新しい国を生む時が来た。<br>過去を振り返らず、前だけを見よ。<br>あなたの意志が、新しい世界を創る。" },
-        { n: "伊邪那美命", r: "いざなみのみこと", d: "【再生の母】<br>一度死して、再誕する。<br>終わりは永遠の別れではない。<br>古い殻を脱ぎ捨て、より強く生まれ変われ。" },
-        { n: "天之常立神", r: "あめのとこたちのかみ", d: "【天の恒久】<br>視座を高く上げよ。<br>目先の損得ではなく、永遠に続く価値を求めよ。<br>あなたの志は、天に届いている。" },
-        { n: "宇摩志阿斯訶備比古遅神", r: "うましあしかびひこじのかみ", d: "【活力の爆発】<br>葦（あし）が勢いよく伸びるように、<br>圧倒的なエネルギーで突破せよ。<br>生命のリズムが最高潮に達している。" },
-        { n: "神産巣日神", r: "かみむすびのかみ", d: "【癒やしと修復】<br>見えざる手が働き、傷は癒やされる。<br>対立は統合へと向かう。<br>安心して、流れに身を委ねよ。" },
-        { n: "高御産巣日神", r: "たかみむすびのかみ", d: "【高次元の導き】<br>あなたは選ばれた。<br>直感を信じよ。それは高次元からの指令だ。<br>見えない力が、あなたを後押ししている。" },
-        { n: "天之御中主神", r: "あめのみなかぬしのかみ", d: "【絶対肯定・宇宙の中心】<br>始原の神が告げる。<br>汝の願いは聞き届けられた。<br>全宇宙があなたを肯定している。<br>迷うことなかれ、絶対起動。" }
-    ];
-
-    // HTMLルビ生成ヘルパー
-    function makeRuby(kanji, kana) {
-        return `<ruby>${kanji}<rt>${kana}</rt></ruby>`;
-    }
-
-    // カレンダーURL生成ヘルパー
-    function generateCalendarUrl(title, desc) {
-        // 現在時刻から1時間の予定とする
-        const now = new Date();
-        const start = now.toISOString().replace(/-|:|\.\d\d\d/g, ""); // YYYYMMDDTHHMMSSZ形式
-        
-        const endObj = new Date(now.getTime() + 60 * 60 * 1000); // 1時間後
-        const end = endObj.toISOString().replace(/-|:|\.\d\d\d/g, "");
-
-        const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
-        const text = `&text=${encodeURIComponent("【神羅万象占】" + title)}`;
-        const dates = `&dates=${start}/${end}`;
-        
-        // brタグを改行に変換してメモ欄へ
-        const cleanDesc = desc.replace(/<br>/g, "\n").replace(/<[^>]+>/g, ""); 
-        const details = `&details=${encodeURIComponent(cleanDesc + "\n\n#神羅万象占い")}`;
-
-        return baseUrl + text + dates + details;
-    }
-
-    // --- ロジックの中枢 ---
-    function divination(theme) {
-        const modal = document.getElementById("result-area");
-        const box = document.getElementById("capture-target");
-        const content = document.getElementById("result-content");
-        const actions = document.getElementById("action-buttons");
-        
-        // リセット
-        box.className = "result-box"; 
-        
-        // 1. 全体確率 (1〜81)
-        const primaryRoll = Math.floor(Math.random() * 81) + 1;
-
-        let htmlContent = "";
-        let modeClass = "";
-        let resultTitle = ""; // カレンダー用タイトル
-        let resultDesc = "";  // カレンダー用本文
-
-        if (primaryRoll > 64) {
-            // ■ パターンA：神の独壇場
-            const godIndex = primaryRoll - 65; 
-            const god = godsData[godIndex];
-            
-            modeClass = "mode-god";
-            let symbol = (primaryRoll === 81) ? "✨" : "⛩️";
-            
-            resultTitle = `神意顕現：${god.n}`;
-            resultDesc = `問い：${theme}\n\n${god.d}`;
-
-            htmlContent = `
-                <div class="symbol">${symbol}</div>
-                <div class="name">${makeRuby(god.n, god.r)}</div>
-                <div class="sub-name">問：${theme} / 【神意顕現】</div>
-                <div class="desc-box" style="text-align:center; font-weight:bold; color:#FFD700; border-left:none;">
-                    ${god.d}
-                </div>
-            `;
-
-        } else {
-            // ■ 易の結果
-            const ichingIndex = primaryRoll - 1;
-            const ichingItem = ichingData[ichingIndex];
-            
-            // ★ オーバーライド抽選 (17/64)
-            const overrideRoll = Math.floor(Math.random() * 64) + 1; 
-            
-            if (overrideRoll <= 17) {
-                // ■ パターンB：オーバーライド
-                const godIndex = Math.floor(Math.random() * 17);
-                const god = godsData[godIndex];
-                
-                modeClass = "mode-override";
-                
-                resultTitle = `神意介入：${ichingItem.k} × ${god.n}`;
-                resultDesc = `問い：${theme}\n\n現象：${ichingItem.k} (${ichingItem.d})\n\n▼神意介入 (${god.n})\n${god.d}`;
-
-                htmlContent = `
-                    <div class="symbol">☯</div>
-                    <div class="name">${makeRuby(ichingItem.k, ichingItem.r)}</div>
-                    <div class="sub-name">問：${theme} / 現象：第${primaryRoll}卦</div>
-                    
-                    <div class="desc-box">
-                        ${ichingItem.d}
-                    </div>
-
-                    <div class="override-sign">⚡️ 神意介入 ⚡️</div>
-                    
-                    <div class="god-voice">
-                        <strong>【${makeRuby(god.n, god.r)}】の神託：</strong><br>
-                        ${god.d}<br>
-                        <span style="font-size:11px; font-weight:normal; display:block; margin-top:8px; opacity:0.8;">※宇宙の律動により、運命は再定義されました。</span>
-                    </div>
-                `;
-            } else {
-                // ■ パターンC：易のみ
-                modeClass = "mode-iching";
-                
-                resultTitle = `現象：${ichingItem.k}`;
-                resultDesc = `問い：${theme}\n\n${ichingItem.d}`;
-
-                htmlContent = `
-                    <div class="symbol">☯</div>
-                    <div class="name">${makeRuby(ichingItem.k, ichingItem.r)}</div>
-                    <div class="sub-name">問：${theme} / 現象：第${primaryRoll}卦</div>
-                    <div class="desc-box">
-                        ${ichingItem.d}
-                    </div>
-                `;
-            }
-        }
-
-        // 描画
-        box.classList.add(modeClass);
-        content.innerHTML = htmlContent;
-        
-        // カレンダーリンクの設定
-        const calUrl = generateCalendarUrl(resultTitle, resultDesc);
-        document.getElementById("btn-cal").href = calUrl;
-
-        // モーダル表示
-        modal.style.display = "flex";
-        setTimeout(() => { 
-            modal.classList.add("show");
-            actions.style.display = "flex"; // アニメーション後にボタン表示
-        }, 10);
-    }
-
-    // --- 画像シェア機能 ---
-    async function shareImage() {
-        const target = document.getElementById("capture-target");
-        
-        try {
-            // html2canvasで撮影
-            const canvas = await html2canvas(target, {
-                backgroundColor: null, // 背景透明を維持（CSS依存）
-                scale: 2 // 高画質化
-            });
-
-            // Blob化
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], "uranai_result.png", { type: "image/png" });
-                
-                // Web Share API (Level 2: File Share) が使えるか確認
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: '神羅万象占いの結果',
-                            text: '私の運命が示されました。 #神羅万象占'
-                        });
-                    } catch (err) {
-                        console.log("シェアキャンセル", err);
-                    }
-                } else {
-                    // PCや非対応ブラウザの場合はダウンロードさせる
-                    const link = document.createElement("a");
-                    link.download = "uranai_result.png";
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    alert("画像を保存しました。SNSアプリを開いて投稿してください。");
-                }
-            });
-
-        } catch (e) {
-            alert("画像の生成に失敗しました。\n" + e);
-        }
-    }
-
-    function closeResult() {
-        const modal = document.getElementById("result-area");
-        const actions = document.getElementById("action-buttons");
-        modal.classList.remove("show");
-        actions.style.display = "none";
-        setTimeout(() => { modal.style.display = "none"; }, 500);
-    }
-</script>
-
-</body>
-</html>
+        {
