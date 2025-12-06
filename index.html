@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>神羅万象・八十一占（SNS連携版）</title>
+<title>神羅万象・八十一占（縦表示版）</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
     /* --- デザインテーマ：宇宙の銀座 × 深海 --- */
@@ -90,13 +90,20 @@
     }
     .menu-btn:active { transform: scale(0.98); background: rgba(197, 160, 89, 0.2); }
 
-    /* --- 結果モーダル --- */
+    /* --- 結果モーダル（ここを修正しました） --- */
     #result-area {
-        display: none; position: fixed; top: 0; left: 0;
+        display: none; 
+        position: fixed; top: 0; left: 0;
         width: 100%; height: 100%;
-        justify-content: center; align-items: center;
+        
+        /* 縦並びにする設定 */
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center;
+        gap: 15px; /* カードとボタンの隙間 */
+
         z-index: 1000;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.85);
         backdrop-filter: blur(8px);
         opacity: 0; transition: opacity 0.5s ease;
         padding: 20px; box-sizing: border-box;
@@ -108,7 +115,11 @@
         width: 100%; max-width: 400px; padding: 40px 25px;
         border-radius: 4px; text-align: center; position: relative;
         box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-        max-height: 75vh; overflow-y: auto;
+        
+        /* 高さを制限してボタンの場所を空ける */
+        max-height: 55vh; 
+        overflow-y: auto;
+        
         border: 1px solid rgba(255,255,255,0.1);
         transform: scale(0.95); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -164,15 +175,16 @@
 
     /* アクションボタン群 */
     .action-area {
-        margin-top: 20px;
-        width: 85%; max-width: 400px;
-        display: flex; flex-direction: column; gap: 8px;
+        /* 上のマージンはflexのgapで管理するので削除 */
+        width: 100%; max-width: 400px;
+        display: flex; flex-direction: column; gap: 10px;
         z-index: 1001;
     }
 
     /* ボタンの共通スタイル */
     .action-btn {
-        padding: 12px; border: none; border-radius: 4px;
+        padding: 14px; /* タップしやすいように少し大きく */
+        border: none; border-radius: 4px;
         font-size: 14px; font-weight: bold;
         cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
         transition: 0.2s; text-decoration: none;
@@ -191,7 +203,7 @@
     }
 
     /* SNSボタングループ（横並び） */
-    .sns-group { display: flex; gap: 8px; }
+    .sns-group { display: flex; gap: 10px; }
     .sns-group .action-btn { flex: 1; }
 
 </style>
@@ -455,14 +467,9 @@
         content.innerHTML = htmlContent;
         
         // 外部連携URLのセット
-        // 1. カレンダー
-        const calDesc = content.innerText; // 全文をメモに入れる
+        const calDesc = content.innerText;
         document.getElementById("btn-cal").href = generateCalendarUrl(resultTitle, calDesc);
-        
-        // 2. X (Twitter)
         document.getElementById("btn-x").href = generateXUrl(shareTextShort);
-        
-        // 3. LINE
         document.getElementById("btn-line").href = generateLineUrl(shareTextShort);
 
         // モーダル表示
