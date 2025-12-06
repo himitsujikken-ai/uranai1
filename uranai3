@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>神羅万象・八十一占（フルデータ版）</title>
+<style>
+    /* --- デザインテーマ：宇宙の銀座 × 深海 --- */
+    :root {
+        --deep-sea-top: #0f2027;
+        --deep-sea-mid: #203a43;
+        --deep-sea-bot: #2c5364;
+        --ginza-gold: #c5a059;
+        --ginza-silver: #e0e0e0;
+        --neon-glow: rgba(197, 160, 89, 0.3);
+    }
+
+    body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", "Zen Old Mincho", serif;
+        background: linear-gradient(180deg, #050510 0%, #0a1525 40%, #001f3f 100%);
+        margin: 0; padding: 0;
+        color: var(--ginza-silver);
+        display: flex; flex-direction: column; align-items: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* 背景のエフェクト */
+    .stars {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        background-image: 
+            radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+            radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
+        background-size: 550px 550px, 350px 350px;
+        opacity: 0.3;
+        z-index: -1;
+    }
+
+    /* --- ヘッダー --- */
+    header {
+        width: 100%;
+        padding: 30px 20px 10px;
+        text-align: center;
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h1 {
+        font-size: 22px;
+        letter-spacing: 0.2em;
+        color: var(--ginza-gold);
+        text-shadow: 0 0 10px var(--neon-glow);
+        margin: 0 0 15px 0;
+    }
+
+    .intro-text {
+        font-size: 13px;
+        line-height: 1.8;
+        max-width: 600px;
+        margin: 0 auto;
+        color: #ccc;
+        text-align: left;
+    }
+    
+    .intro-highlight { color: var(--ginza-gold); font-weight: bold; }
+
+    /* --- メニュー --- */
+    .container {
+        width: 90%; max-width: 450px; margin-top: 30px; padding-bottom: 60px;
+        display: flex; flex-direction: column; gap: 15px;
+    }
+
+    .menu-btn {
+        position: relative; width: 100%; padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        border: 1px solid rgba(197, 160, 89, 0.3);
+        border-radius: 2px;
+        font-family: "Hiragino Mincho ProN", serif;
+        font-size: 16px; letter-spacing: 0.1em;
+        cursor: pointer; transition: all 0.3s ease; overflow: hidden;
+    }
+    .menu-btn:hover {
+        background: rgba(197, 160, 89, 0.15);
+        border-color: var(--ginza-gold);
+        box-shadow: 0 0 15px var(--neon-glow);
+    }
+
+    /* --- 結果モーダル --- */
+    #result-area {
+        display: none; position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        justify-content: center; align-items: center;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        opacity: 0; transition: opacity 0.5s ease;
+    }
+    #result-area.show { opacity: 1; }
+
+    .result-box {
+        width: 85%; max-width: 400px; padding: 40px 30px;
+        border-radius: 4px; text-align: center; position: relative;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+        max-height: 85vh; overflow-y: auto;
+        border: 1px solid rgba(255,255,255,0.1);
+        transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #result-area.show .result-box { transform: scale(1); }
+
+    /* モード別デザイン */
+    .mode-iching {
+        background: linear-gradient(145deg, #1e2a38, #131a25);
+        border: 1px solid #4a6fa5; color: #e0f7fa;
+    }
+    .mode-iching .symbol { color: #81d4fa; text-shadow: 0 0 10px #0277bd; }
+
+    .mode-god {
+        background: linear-gradient(135deg, #2c2507, #000000);
+        border: 2px solid #FFD700; color: #FFD700;
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+    }
+    .mode-god .symbol { text-shadow: 0 0 20px #FFD700; }
+
+    .mode-override {
+        background: linear-gradient(to bottom, #102027 0%, #1c3b4a 40%, #463815 100%);
+        border: 2px solid #e0aa3e; color: #fff;
+    }
+
+    /* テキストスタイル */
+    .symbol { font-size: 70px; margin-bottom: 10px; line-height: 1; display: block;}
+    ruby { ruby-align: center; }
+    rt { font-size: 0.5em; opacity: 0.8; font-weight: normal; color: inherit; }
+    .name { font-size: 24px; font-weight: bold; margin-bottom: 5px; letter-spacing: 2px; }
+    .sub-name { font-size: 12px; opacity: 0.7; margin-bottom: 20px; letter-spacing: 1px; }
+    
+    .desc-box {
+        text-align: left; font-size: 15px; line-height: 1.8;
+        padding: 20px; background-color: rgba(0,0,0,0.3);
+        border-radius: 4px; margin-bottom: 10px;
+        border-left: 3px solid rgba(255,255,255,0.2);
+    }
+
+    .override-sign {
+        margin: 25px 0 10px 0; font-size: 18px; font-weight: bold;
+        color: #ff4d4d; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+        letter-spacing: 4px; animation: pulse 1.5s infinite alternate;
+    }
+    @keyframes pulse { from { opacity: 0.6; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+
+    .god-voice {
+        font-family: serif; font-weight: bold; color: #FFD700;
+        background-color: rgba(0,0,0,0.6); border: 1px solid #FFD700;
+        padding: 15px; margin-top: 10px;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+
+    .close-btn {
+        margin-top: 25px; padding: 12px 40px;
+        border: 1px solid rgba(255,255,255,0.3); background: transparent;
+        color: #fff; cursor: pointer; font-size: 14px; transition: 0.3s;
+    }
+    .close-btn:hover { background: rgba(255,255,255,0.1); letter-spacing: 2px; }
+
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+    <h1>八十一占<span style="font-size:11px; display:block; margin-top:5px; opacity:0.7;">SHINRA - BANSHO</span></h1>
+    <div class="intro-text">
+        <p>
+            古来の<span class="intro-highlight">「易（64の現象）」</span>と、
+            神話の<span class="intro-highlight">「神代十七代（17の神意）」</span>を融合させた、
+            計81通りの『神羅万象グリッド』システム。
+        </p>
+        <p>
+            宇宙のリズム（凪や時化）が、運命を強制的に書き換える
+            <span class="intro-highlight">「オーバーライド（神意介入）」</span>の瞬間を見逃さないでください。
+        </p>
+    </div>
+</header>
+
+<div class="container">
+    <button class="menu-btn" onclick="divination('展望')">展望</button>
+    <button class="menu-btn" onclick="divination('受け取るべきこと')">受け取るべきこと</button>
+    <button class="menu-btn" onclick="divination('望みの実現')">望みの実現</button>
+    <button class="menu-btn" onclick="divination('相手の気持ち')">相手の気持ち</button>
+    <button class="menu-btn" onclick="divination('人間関係')">人間関係</button>
+    <button class="menu-btn" onclick="divination('仕事運')">仕事運</button>
+    <button class="menu-btn" onclick="divination('金運')">金運</button>
+</div>
+
+<div id="result-area">
+    <div id="result-box" class="result-box"></div>
+</div>
+
+<script>
+    // --- 64卦 完全データ (k=漢字, r=読み, d=現象の意味) ---
+    const ichingData = [
+        { k: "乾為天", r: "けんいてん", d: "【大吉】天のごとく強健な勢いがあります。迷わず進むことで道が開けます。リーダーシップを発揮する時。" },
+        { k: "坤為地", r: "こんいち", d: "【吉】大地のような受容の時。自ら動くより、流れに身を任せ、人を支えることで幸運を得ます。" },
+        { k: "水雷屯", r: "すいらいちゅん", d: "【凶】生みの苦しみ。今は動かず、じっと耐えて力を蓄えるべき時です。春を待ちましょう。" },
+        { k: "山水蒙", r: "さんすいもう", d: "【小凶】視界が霧に包まれています。独断は避け、師や賢者の教えを請うべき時です。" },
+        { k: "水天需", r: "すいてんじゅ", d: "【吉】待てば海路の日和あり。焦らずにチャンスを待つことで、大きな成果が得られます。" },
+        { k: "天水訟", r: "てんすいしょう", d: "【凶】争いごとの暗示。無理に通そうとすれば深手ごを負います。退くが勝ちです。" },
+        { k: "地水師", r: "ちすいし", d: "【吉】指導者として人を率いる時。規律と正義を持って行動すれば、多くの人が従います。" },
+        { k: "水地比", r: "すいちは", d: "【吉】人と親しむ時。孤立せず、周囲と協力関係を築くことで喜びが生まれます。" },
+        { k: "風天小畜", r: "ふうてんしょうちく", d: "【小吉】少し止まる時。準備不足の感があります。今は無理せず、身近なことを整えましょう。" },
+        { k: "天沢履", r: "てんたくり", d: "【吉】虎の尾を踏むような危険がありますが、礼儀を尽くせば無事に通れます。慎重さが鍵。" },
+        { k: "地天泰", r: "ちてんたい", d: "【大吉】安泰の時。天地が交わり、万事がスムーズに進みます。平和と繁栄の象徴です。" },
+        { k: "天地否", r: "てんちひ", d: "【凶】閉塞状態。意見が通じません。今は耐えて、嵐が過ぎるのを待つのが賢明です。" },
+        { k: "天火同人", r: "てんかどうじん", d: "【大吉】志を同じくする仲間が集まります。協力することで大きな目的を達成できるでしょう。" },
+        { k: "火天大有", r: "かてんたいゆう", d: "【大吉】太陽が天にある絶頂期。多くのものを所有できます。謙虚さを忘れなければ永く続きます。" },
+        { k: "地山謙", r: "ちざんけん", d: "【吉】謙虚さが幸運を呼びます。実るほど頭を垂れる稲穂のように振る舞えば、評価が上がります。" },
+        { k: "雷地予", r: "らいちよ", d: "【吉】喜びと楽しみの時。準備万端で自信を持って進めば、未来は明るいでしょう。" },
+        { k: "沢雷随", r: "たくらいずい", d: "【大吉】流れに従う時。臨機応変に変化に対応することで、物事が好転します。" },
+        { k: "山風蠱", r: "さんぷうこ", d: "【小凶】内部に腐敗があります。膿を出し切り、抜本的な改革を行うべき時です。" },
+        { k: "地沢臨", r: "ちたくりん", d: "【大吉】希望が満ちてくる時。好機到来です。チャンスを逃さず積極的に行動しましょう。" },
+        { k: "風地観", r: "ふうちは", d: "【吉】静観する時。行動するよりも、全体を俯瞰して精神性を高めることが大切です。" },
+        { k: "火雷噬嗑", r: "からいぜいご", d: "【吉】邪魔者を排除する時。障害を噛み砕くように、断固たる処置が必要です。" },
+        { k: "山火賁", r: "さんかひ", d: "【小吉】夕日のような美しさ。外見を飾ることも大切ですが、中身が伴うように注意。" },
+        { k: "山地剥", r: "さんちはく", d: "【凶】足元が削られる時。崩壊の危機。今は守りを固め、決して動いてはいけません。" },
+        { k: "地雷復", r: "ちらいふく", d: "【吉】一陽来復。長い冬が終わり、春の兆しが見えてきました。徐々に運気が回復します。" },
+        { k: "天雷無妄", r: "てんらいむもう", d: "【吉】無欲で自然体なら吉。作為的な行動や嘘は災いを招きます。正直であれ。" },
+        { k: "山天大畜", r: "さんてんたいちく", d: "【吉】大きく蓄える時。実力を養い、エネルギーを溜め込むことで、後の大成につながります。" },
+        { k: "山雷頤", r: "さんらいい", d: "【吉】養う時。言葉（口から出るもの）と食事（口に入るもの）を慎むことが重要です。" },
+        { k: "沢風大過", r: "たくふうたいか", d: "【凶】荷が重すぎます。柱がたわむような非常事態。無理をせず、撤退も視野に。" },
+        { k: "坎為水", r: "かんいすい", d: "【凶】困難が重なる時期。水に溺れるような苦しみ。もがけば沈みます。流れに身を任せよ。" },
+        { k: "離為火", r: "りいか", d: "【吉】知性と情熱の時。火のように輝きますが、燃え移る対象（パートナー）選びが重要です。" },
+        { k: "沢山咸", r: "たくざんかん", d: "【吉】感じ合う時。直感が冴え渡ります。理屈ではなく、心の声に従って即断すべきです。" },
+        { k: "雷風恒", r: "らいふうこう", d: "【吉】変わらないことの良さ。日常を大切にし、持続することで道が開けます。" },
+        { k: "天山遯", r: "てんざんとん", d: "【小凶】逃げるが勝ち。今は戦う時ではありません。賢く退いて身を守りましょう。" },
+        { k: "雷天大壮", r: "らいてんたいそう", d: "【吉】勢いが強すぎます。暴走すると失敗します。自制心を持って進めば成功します。" },
+        { k: "火地晋", r: "かちしん", d: "【大吉】旭日が昇る勢い。目上の引き立てを受け、トントン拍子に出世・前進します。" },
+        { k: "地火明夷", r: "ちかめいい", d: "【凶】太陽が沈み、闇に包まれます。才能を隠し、愚か者を装って難を逃れるべき時。" },
+        { k: "風火家人", r: "ふうかかじん", d: "【吉】家庭や内部を守る時。外に出るより、内側を整えることで安定が得られます。" },
+        { k: "火沢睽", r: "かたくけい", d: "【小凶】背き合う時。意見が対立し、和解は難しい。無理に合わせようとしないこと。" },
+        { k: "水山蹇", r: "すいざんけん", d: "【凶】足踏み状態。進めば進むほど困難になります。助けを求め、時を待ちましょう。" },
+        { k: "雷水解", r: "らいすいかい", d: "【吉】困難が解ける時。雪解けです。早めに行動して問題を解決しましょう。" },
+        { k: "山沢損", r: "さんたくそん", d: "【吉】損して得取れ。今の奉仕や犠牲は、将来大きな利益となって返ってきます。" },
+        { k: "風雷益", r: "ふうらいえき", d: "【大吉】利益が増す時。追い風が吹いています。積極的に事業や計画を進めて吉。" },
+        { k: "沢天夬", r: "たくてんかい", d: "【凶】決壊寸前。問題を放置せず、断固たる決断で排除しなければなりません。" },
+        { k: "天風姤", r: "てんぷうこう", d: "【小凶】予期せぬ出会い。特に女性難やハニートラップに注意。深入りは禁物です。" },
+        { k: "沢地萃", r: "たくちすい", d: "【吉】人が集まる時。祭りごとや商売には最適です。リーダーシップが求められます。" },
+        { k: "地風升", r: "ちふうしょう", d: "【大吉】順調に上昇する時。小さな種が巨木になるように、着実な努力が実ります。" },
+        { k: "沢水困", r: "たくすいこん", d: "【凶】水が枯れる沢。進退窮まります。言葉も通じません。じっと我慢の時です。" },
+        { k: "水風井", r: "すいふうせい", d: "【吉】井戸の水。変わらぬ価値。労を惜しまず、人々に尽くすことで評価されます。" },
+        { k: "沢火革", r: "たくかかく", d: "【吉】変革の時。古いものを捨て、新しく作り直すのに最適なタイミングです。" },
+        { k: "火風鼎", r: "かふうてい", d: "【大吉】三本足の器。協力して新体制を作る時。安定と繁栄が約束されています。" },
+        { k: "震為雷", r: "しんいらい", d: "【吉】雷の衝撃。驚くような出来事がありますが、実害はありません。冷静に対処を。" },
+        { k: "艮為山", r: "ごんいざん", d: "【凶】動かざること山の如し。今は何をしてもうまくいきません。止まるべき時です。" },
+        { k: "風山漸", r: "ふうざんぜん", d: "【吉】順序正しく進む時。急がば回れ。一歩ずつ着実に進めば大成します。" },
+        { k: "雷沢帰妹", r: "らいたくきまい", d: "【凶】順序が逆です。目先の欲に走ると失敗します。道ならぬ恋や計画は破綻します。" },
+        { k: "雷火豊", r: "らいかほう", d: "【吉】豊かさの絶頂。日中はいずれ傾くことを知り、今のうちに備えを固めましょう。" },
+        { k: "火山旅", r: "かざんりょ", d: "【小凶】孤独な旅。不安定な状態です。定住するより、移動しながら学ぶ時期です。" },
+        { k: "巽為風", r: "そんいふう", d: "【吉】風のように入り込む時。謙虚に従順に行動すれば、どこへでも通じます。" },
+        { k: "兌為沢", r: "だいたく", d: "【大吉】喜びと笑顔の時。人との会話や交流を楽しむことで、運気がさらに上がります。" },
+        { k: "風水渙", r: "ふうすいかん", d: "【吉】散らばる時。悩みが霧散します。遠出や冒険に出ることで道が開けます。" },
+        { k: "水沢節", r: "すいたくせつ", d: "【吉】節度を守る時。制限の中にこそ自由があります。けじめをつけることが大切。" },
+        { k: "風沢中孚", r: "ふうたくちゅうふ", d: "【大吉】誠実さの勝利。真心があれば、豚や魚のような相手とも心が通じ合います。" },
+        { k: "雷山小過", r: "らいざんしょうか", d: "【凶】飛び過ぎる鳥。高望みは失敗します。低く飛び、謙虚さを保つことが重要です。" },
+        { k: "水火既済", r: "すいかきせい", d: "【小吉】完成しました。これ以上の発展は望めません。現状維持（守成）に努めましょう。" },
+        { k: "火水未済", r: "かすいびせい", d: "【小吉】未完成。まだ整っていませんが、未来への希望があります。これから始まります。" }
+    ];
+
+    // --- 神代十七代 完全データ ---
+    const godsData = [
+        { n: "国常立尊", r: "くにのとこたちのみこと", d: "【基盤確立】<br>大地の根源神が告げる。<br>迷いを断ち切り、足元を固めよ。<br>揺るぎない信念こそが、最強の盾となる。" },
+        { n: "豊雲野神", r: "とよくもののかみ", d: "【原初の雲】<br>可能性は無限に広がっている。<br>枠に囚われるな。まだ見ぬ領域を開拓せよ。<br>自由な発想が道を拓く。" },
+        { n: "宇比地邇神", r: "うひじにのかみ", d: "【泥土の結晶】<br>形なきものから、形あるものが生まれる。<br>混沌を恐れるな。その中にある宝を見つけ出せ。<br>始まりの時だ。" },
+        { n: "須比智邇神", r: "すひちにのかみ", d: "【砂土の堆積】<br>一足飛びの成功はない。<br>日々の小さな積み重ねが、やがて強固な地盤となる。<br>継続こそが力なり。" },
+        { n: "角杙神", r: "つのぐいのかみ", d: "【生命の萌芽】<br>土を突き破り、芽が出る時。<br>新しい企画、新しい関係が動き出す。<br>その初期衝動を大切にせよ。" },
+        { n: "活杙神", r: "いくぐいのかみ", d: "【成長と活力】<br>生命力がみなぎっている。<br>迷わず勢いに乗れ。<br>今なら、どんな壁も突き破ることができる。" },
+        { n: "意富斗能地神", r: "おおとのじのかみ", d: "【男性原理】<br>決断の時だ。<br>待つのではなく、自ら掴み取れ。<br>論理と意志の力で、状況をリードせよ。" },
+        { n: "大斗乃弁神", r: "おおとのべのかみ", d: "【女性原理】<br>受け入れ、育む時。<br>強引さよりも、包容力が事態を好転させる。<br>柔らかさは硬さよりも強い。" },
+        { n: "於母陀流神", r: "おもだるのかみ", d: "【完成の美】<br>調和が訪れる。<br>不足を嘆くのではなく、今あるものの美しさを見よ。<br>満ち足りた心が、さらなる幸運を呼ぶ。" },
+        { n: "阿夜訶志古泥神", r: "あやかしこねのかみ", d: "【畏敬と感性】<br>言葉にできない感覚を信じよ。<br>謙虚さを持ち、大いなるものに感謝する時、<br>あなたは守られている。" },
+        { n: "伊邪那岐命", r: "いざなぎのみこと", d: "【創造の父】<br>新しい国を生む時が来た。<br>過去を振り返らず、前だけを見よ。<br>あなたの意志が、新しい世界を創る。" },
+        { n: "伊邪那美命", r: "いざなみのみこと", d: "【再生の母】<br>一度死して、再誕する。<br>終わりは永遠の別れではない。<br>古い殻を脱ぎ捨て、より強く生まれ変われ。" },
+        { n: "天之常立神", r: "あめのとこたちのかみ", d: "【天の恒久】<br>視座を高く上げよ。<br>目先の損得ではなく、永遠に続く価値を求めよ。<br>あなたの志は、天に届いている。" },
+        { n: "宇摩志阿斯訶備比古遅神", r: "うましあしかびひこじのかみ", d: "【活力の爆発】<br>葦（あし）が勢いよく伸びるように、<br>圧倒的なエネルギーで突破せよ。<br>生命のリズムが最高潮に達している。" },
+        { n: "神産巣日神", r: "かみむすびのかみ", d: "【癒やしと修復】<br>見えざる手が働き、傷は癒やされる。<br>対立は統合へと向かう。<br>安心して、流れに身を委ねよ。" },
+        { n: "高御産巣日神", r: "たかみむすびのかみ", d: "【高次元の導き】<br>あなたは選ばれた。<br>直感を信じよ。それは高次元からの指令だ。<br>見えない力が、あなたを後押ししている。" },
+        { n: "天之御中主神", r: "あめのみなかぬしのかみ", d: "【絶対肯定・宇宙の中心】<br>始原の神が告げる。<br>汝の願いは聞き届けられた。<br>全宇宙があなたを肯定している。<br>迷うことなかれ、絶対起動。" }
+    ];
+
+    // --- HTMLヘルパー ---
+    function makeRuby(kanji, kana) {
+        return `<ruby>${kanji}<rt>${kana}</rt></ruby>`;
+    }
+
+    // --- 占い実行ロジック ---
+    function divination(theme) {
+        const modal = document.getElementById("result-area");
+        const box = document.getElementById("result-box");
+        
+        // リセット
+        box.className = "result-box"; 
+        modal.classList.add("show");
+        
+        // 1. 全体確率 (1〜81)
+        const primaryRoll = Math.floor(Math.random() * 81) + 1;
+
+        let htmlContent = "";
+        let modeClass = "";
+
+        if (primaryRoll > 64) {
+            // ■ パターンA：神の独壇場（神意顕現）
+            const godIndex = primaryRoll - 65; 
+            const god = godsData[godIndex];
+            
+            modeClass = "mode-god";
+            let symbol = (primaryRoll === 81) ? "✨" : "⛩️";
+            
+            htmlContent = `
+                <div class="symbol">${symbol}</div>
+                <div class="name">${makeRuby(god.n, god.r)}</div>
+                <div class="sub-name">問：${theme} / 【神意顕現】</div>
+                <div class="desc-box" style="text-align:center; font-weight:bold; color:#FFD700; border-left:none;">
+                    ${god.d}
+                </div>
+            `;
+
+        } else {
+            // ■ 易の結果
+            const ichingIndex = primaryRoll - 1;
+            const ichingItem = ichingData[ichingIndex];
+            
+            // ★ オーバーライド抽選 (17/64)
+            const overrideRoll = Math.floor(Math.random() * 64) + 1; 
+            
+            if (overrideRoll <= 17) {
+                // ■ パターンB：オーバーライド（易＋神）
+                const godIndex = Math.floor(Math.random() * 17);
+                const god = godsData[godIndex];
+                
+                modeClass = "mode-override";
+                
+                htmlContent = `
+                    <div class="symbol">☯</div>
+                    <div class="name">${makeRuby(ichingItem.k, ichingItem.r)}</div>
+                    <div class="sub-name">問：${theme} / 現象：第${primaryRoll}卦</div>
+                    
+                    <div class="desc-box">
+                        ${ichingItem.d}
+                    </div>
+
+                    <div class="override-sign">⚡️ 神意介入 ⚡️</div>
+                    
+                    <div class="god-voice">
+                        <strong>【${makeRuby(god.n, god.r)}】の神託：</strong><br>
+                        ${god.d}<br>
+                        <span style="font-size:11px; font-weight:normal; display:block; margin-top:8px; opacity:0.8;">※宇宙の律動(リズム)により、運命は再定義されました。</span>
+                    </div>
+                `;
+            } else {
+                // ■ パターンC：易のみ（通常）
+                modeClass = "mode-iching";
+                
+                htmlContent = `
+                    <div class="symbol">☯</div>
+                    <div class="name">${makeRuby(ichingItem.k, ichingItem.r)}</div>
+                    <div class="sub-name">問：${theme} / 現象：第${primaryRoll}卦</div>
+                    <div class="desc-box">
+                        ${ichingItem.d}
+                    </div>
+                `;
+            }
+        }
+
+        // 描画
+        box.classList.add(modeClass);
+        htmlContent += `<button class="close-btn" onclick="closeResult()">閉じる</button>`;
+        box.innerHTML = htmlContent;
+        modal.style.display = "flex";
+        
+        setTimeout(() => { modal.classList.add("show"); }, 10);
+    }
+
+    function closeResult() {
+        const modal = document.getElementById("result-area");
+        modal.classList.remove("show");
+        setTimeout(() => { modal.style.display = "none"; }, 500);
+    }
+</script>
+
+</body>
+</html>
